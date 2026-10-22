@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassmorphism · Advanced UI/UX (all-in-one)</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ---------- GLOBAL RESET & TYPOGRAPHY ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at 20% 30%, #c084fc, #7e22ce 50%, #2e1065);
+            background-size: 200% 200%;
+            animation: gradientShift 14s ease infinite;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        @keyframes gradientShift {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* Floating abstract blobs for depth */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: #f0abfc;
+            top: -100px;
+            right: -100px;
+            animation: float1 18s infinite alternate;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: #a78bfa;
+            bottom: -150px;
+            left: -100px;
+            animation: float2 22s infinite alternate;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: #38bdf8;
+            top: 40%;
+            left: 70%;
+            filter: blur(90px);
+            opacity: 0.4;
+            animation: float3 15s infinite alternate;
+        }
+
+        @keyframes float1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-60px, 60px) scale(1.1); }
+        }
+        @keyframes float2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, -50px) scale(1.2); }
+        }
+        @keyframes float3 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-40px, 80px) scale(0.9); }
+        }
+
+        /* ---------- MAIN GLASS CARD ---------- */
+        .glass-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px) saturate(200%);
+            -webkit-backdrop-filter: blur(16px) saturate(200%);
+            border-radius: 3rem;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.25),
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                        0 0 40px rgba(255, 255, 255, 0.15) inset;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .glass-container:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 40px 60px rgba(0, 0, 0, 0.35),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                        0 0 50px rgba(255, 255, 255, 0.25) inset;
+        }
+
+        /* ---------- LEFT PANEL: TYPOGRAPHY & CTA ---------- */
+        .content-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding-right: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 60px;
+            padding: 0.5rem 1.4rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            width: fit-content;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .content-panel h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #e0d7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-panel p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+            font-weight: 300;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e1b4b;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-primary i {
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.8) inset;
+            transform: scale(1.02);
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 0.9rem 2.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* ---------- RIGHT PANEL: GLASS STATS / INTERACTIVE CARDS ---------- */
+        .visual-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border-radius: 2rem;
+            padding: 1.5rem 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                        0 0 25px rgba(255, 255, 255, 0.1) inset;
+            transition: all 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateX(6px) scale(1.01);
+            box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.5),
+                        0 0 0 1px rgba(255, 255, 255, 0.3) inset,
+                        0 0 30px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .card-icon {
+            font-size: 2.2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .card-text h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            letter-spacing: 0.2px;
+        }
+
+        /* small metric row inside third card */
+        .metric-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .metric-row span i {
+            margin-right: 0.3rem;
+            color: #c4b5fd;
+        }
+
+        /* ---------- ALL-IN-ONE DEMO SECTION (new) ---------- */
+        .demo-wrapper {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            max-width: 1100px;
+            margin: 2.5rem auto 0;
+            display: flex;
+            justify-content: center;
+            pointer-events: auto;
+        }
+
+        .demo-glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px) saturate(200%);
+            -webkit-backdrop-filter: blur(18px) saturate(200%);
+            border-radius: 2.5rem;
+            padding: 1.8rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .demo-glass:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .demo-text {
+            color: white;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-text i {
+            font-size: 1.6rem;
+            color: #ddd6fe;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .demo-text span {
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .demo-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.3);
+        }
+
+        .demo-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: #ffffff;
+            transform: scale(1.03);
+            box-shadow: 0 15px 25px -8px rgba(0, 0, 0, 0.5);
+        }
+
+        .demo-btn i {
+            transition: transform 0.2s;
+        }
+
+        .demo-btn:hover i {
+            transform: rotate(15deg);
+        }
+
+        /* ---------- LAYOUT WRAPPER (to stack glass-container + demo) ---------- */
+        .page-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 800px) {
+            .glass-container {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+                padding: 2rem;
+                border-radius: 2rem;
+            }
+
+            .content-panel h1 {
+                font-size: 2.8rem;
+            }
+
+            .content-panel p {
+                max-width: 100%;
+            }
+
+            .blob-3 {
+                display: none;
+            }
+
+            .glass-card {
+                padding: 1.3rem 1.5rem;
+            }
+
+            .demo-glass {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.8rem;
+            }
+
+            .demo-text {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .glass-container {
+                padding: 1.6rem;
+                border-radius: 1.8rem;
+            }
+
+            .content-panel h1 {
+                font-size: 2.2rem;
+            }
+
+            .badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 1rem;
+            }
+
+            .btn-primary, .btn-outline {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .glass-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.2rem;
+            }
+
+            .card-icon {
+                width: 2.8rem;
+                height: 2.8rem;
+                font-size: 1.8rem;
+            }
+
+            .metric-row {
+                justify-content: center;
+            }
+
+            .demo-glass {
+                padding: 1.2rem;
+                border-radius: 1.8rem;
+            }
+
+            .demo-text span {
+                font-size: 0.9rem;
+            }
+
+            .demo-btn {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Abstract background blobs (glassmorphism context) -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Page stack: main glass container + demo bar -->
+    <div class="page-stack">
+        <!-- MAIN GLASS CARD (original) -->
+        <div class="glass-container">
+            <!-- LEFT: Hero content -->
+            <div class="content-panel">
+                <span class="badge"><i class="fas fa-sparkles" style="margin-right: 8px;"></i> futuristic interface</span>
+                <h1>Glass<br>Morphism</h1>
+                <p>Experience depth, transparency, and light. A refined UI with blurred backgrounds, frosted layers, and subtle glow.</p>
+                <div class="button-group">
+                    <button class="btn-primary" id="getStartedBtn">
+                        Get started <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn-outline" id="previewBtn">
+                        <i class="fas fa-play"></i> Preview
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT: Interactive glass stats cards -->
+            <div class="visual-panel">
+                <!-- Card 1 -->
+                <div class="glass-card">
+                    <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="card-text">
+                        <h3>+128%</h3>
+                        <p>Engagement boost</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-card">
+                    <div class="card-icon"><i class="fas fa-droplet"></i></div>
+                    <div class="card-text">
+                        <h3>Blur 24px</h3>
+                        <p>Advanced depth layer</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="card-text" style="flex:1;">
+                        <h3>Live metrics</h3>
+                        <div class="metric-row">
+                            <span><i class="fas fa-eye"></i> 8.2k</span>
+                            <span><i class="fas fa-heart"></i> 1.4k</span>
+                            <span><i class="fas fa-share"></i> 623</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALL-IN-ONE DEMO SECTION (functional) -->
+        <div class="demo-wrapper">
+            <div class="demo-glass">
+                <div class="demo-text">
+                    <i class="fas fa-cube"></i>
+                    <span id="demoMessage">Glassmorphism demo · ready</span>
+                </div>
+                <button class="demo-btn" id="demoActionBtn">
+                    <i class="fas fa-magic"></i> Activate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript: makes the all-in-one demo interactive -->
+    <script>
+        (function() {
+            const demoBtn = document.getElementById('demoActionBtn');
+            const demoMessage = document.getElementById('demoMessage');
+            const getStartedBtn = document.getElementById('getStartedBtn');
+            const previewBtn = document.getElementById('previewBtn');
+
+            // Counter for activation
+            let clickCount = 0;
+
+            // Main demo action: change message and add a little animation to the whole page
+            demoBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                clickCount++;
+
+                // Update message with counter
+                demoMessage.textContent = `✨ Activated · ${clickCount} ${clickCount === 1 ? 'time' : 'times'}`;
+
+                // Optional: subtle interaction on the demo bar itself
+                const demoBar = document.querySelector('.demo-glass');
+                demoBar.style.transform = 'scale(1.02)';
+                setTimeout(() => { demoBar.style.transform = 'scale(1)'; }, 200);
+
+                // Change button text temporarily
+                const originalText = demoBtn.innerHTML;
+                demoBtn.innerHTML = '<i class="fas fa-check-circle"></i> Done!';
+                setTimeout(() => {
+                    demoBtn.innerHTML = originalText;
+                }, 900);
+            });
+
+            // "Get started" button feedback
+            getStartedBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const original = getStartedBtn.innerHTML;
+                getStartedBtn.innerHTML = '<i class="fas fa-check"></i> Started!';
+                setTimeout(() => {
+                    getStartedBtn.innerHTML = original;
+                }, 1200);
+                // Also update demo message to hint at interaction
+                demoMessage.textContent = '🚀 Get started clicked — glassmorphism active';
+            });
+
+            // "Preview" button feedback
+            previewBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const original = previewBtn.innerHTML;
+                previewBtn.innerHTML = '<i class="fas fa-eye"></i> Previewing...';
+                setTimeout(() => {
+                    previewBtn.innerHTML = original;
+                }, 1200);
+                demoMessage.textContent = '👁️ Preview mode — enjoy the blur!';
+            });
+
+            // Optional: also make the glass cards respond with a small click effect
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    card.style.transform = 'scale(0.98)';
+                    setTimeout(() => { card.style.transform = ''; }, 150);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
